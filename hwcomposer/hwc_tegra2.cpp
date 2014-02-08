@@ -655,12 +655,15 @@ static int tegra2_open(const struct hw_module_t *module, const char *name,
 	// Get framebuffer info
 	if (dev->fb_fd >= 0 && ioctl(dev->fb_fd, FBIOGET_VSCREENINFO, &info) != -1) {
 			
-		unsigned long long refreshRate = 1000000000000LLU /
-			(
-			 uint64_t( info.upper_margin + info.lower_margin + info.yres )
-			 * ( info.left_margin  + info.right_margin + info.xres )
-			 * info.pixclock
-			);
+		unsigned long long refreshRate = 0;
+		if (info.pixclock > 0) {
+			refreshRate = 1000000000000LLU /
+				(
+			 	uint64_t( info.upper_margin + info.lower_margin + info.yres )
+			 	* ( info.left_margin  + info.right_margin + info.xres )
+			 	* info.pixclock
+				);
+		}
 
 		if (refreshRate == 0) {
 			ALOGW("invalid refresh rate, assuming 60 Hz");
