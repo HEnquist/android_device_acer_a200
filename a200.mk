@@ -56,8 +56,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ramdisk/init.picasso_e.usb.rc:root/init.picasso_e.usb.rc \
     $(LOCAL_PATH)/ramdisk/ueventd.picasso_e.rc:root/ueventd.picasso_e.rc \
-    $(LOCAL_PATH)/ramdisk/init.picasso.rc:root/init.picasso_e.rc \
-    $(LOCAL_PATH)/ramdisk/fstab.picasso:root/fstab.picasso_e 
+    $(LOCAL_PATH)/ramdisk/init.picasso_e.rc:root/init.picasso_e.rc \
+    $(LOCAL_PATH)/ramdisk/fstab.picasso_e:root/fstab.picasso_e 
     
 # firmware
 PRODUCT_COPY_FILES += \
