@@ -181,6 +181,7 @@ static void select_devices(struct audio_device *adev)
     int docked;
     int main_mic_on;
     int hdmi_on;
+    int headset_mic_on;
 
     headphone_on = adev->out_device & (AUDIO_DEVICE_OUT_WIRED_HEADSET |
                                     AUDIO_DEVICE_OUT_WIRED_HEADPHONE);
@@ -188,7 +189,7 @@ static void select_devices(struct audio_device *adev)
     docked = adev->out_device & AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET;
     main_mic_on = adev->in_device & AUDIO_DEVICE_IN_BUILTIN_MIC;
     hdmi_on = adev->out_device & AUDIO_DEVICE_OUT_AUX_DIGITAL;
-
+    headset_mic_on = adev->in_device & AUDIO_DEVICE_IN_WIRED_HEADSET;
     reset_mixer_state(adev->ar);
 
     if (speaker_on)
@@ -202,6 +203,9 @@ static void select_devices(struct audio_device *adev)
             audio_route_apply_path(adev->ar, "main-mic-left");
         else
             audio_route_apply_path(adev->ar, "main-mic-top");
+    }
+    if (headset_mic_on) {
+    	audio_route_apply_path(adev->ar, "headset-mic");
     }
 
     update_mixer_state(adev->ar);
@@ -576,8 +580,8 @@ static int out_set_parameters(struct audio_stream *stream, const char *kvpairs)
             }
 
             adev->out_device = val;
-            select_devices(adev);
         }
+        select_devices(adev);
     }
     pthread_mutex_unlock(&adev->lock);
 
@@ -880,8 +884,8 @@ static int in_set_parameters(struct audio_stream *stream, const char *kvpairs)
             }
 
             adev->in_device = val;
-            select_devices(adev);
         }
+        select_devices(adev);
     }
     pthread_mutex_unlock(&adev->lock);
 
