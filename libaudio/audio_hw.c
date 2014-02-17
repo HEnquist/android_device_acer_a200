@@ -190,6 +190,7 @@ static void select_devices(struct audio_device *adev)
     main_mic_on = adev->in_device & AUDIO_DEVICE_IN_BUILTIN_MIC;
     hdmi_on = adev->out_device & AUDIO_DEVICE_OUT_AUX_DIGITAL;
     headset_mic_on = adev->in_device & AUDIO_DEVICE_IN_WIRED_HEADSET;
+
     reset_mixer_state(adev->ar);
 
     if (speaker_on)
@@ -198,15 +199,19 @@ static void select_devices(struct audio_device *adev)
         audio_route_apply_path(adev->ar, "headphone");
     if (docked)
         audio_route_apply_path(adev->ar, "dock");
-    if (main_mic_on) {
+
+    if (headset_mic_on) {
+    	audio_route_apply_path(adev->ar, "headset-mic");
+    }
+    else {
+      if (main_mic_on) {
         if (adev->orientation == ORIENTATION_LANDSCAPE)
             audio_route_apply_path(adev->ar, "main-mic-left");
         else
             audio_route_apply_path(adev->ar, "main-mic-top");
+      }
     }
-    if (headset_mic_on) {
-    	audio_route_apply_path(adev->ar, "headset-mic");
-    }
+
 
     update_mixer_state(adev->ar);
 
